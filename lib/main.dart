@@ -1,8 +1,7 @@
+import 'package:calculator_beta/component/calculate.dart';
 import 'package:calculator_beta/constant/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'screen/result_rate.dart';
 
 void main() => runApp(const MyApp());
 
@@ -11,19 +10,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const appTitle = '피타고라스 승률 계산기';
+    // const appTitle = '피타고라스 승률 계산기';
 
     return MaterialApp(
-      title: appTitle,
-      home: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text(appTitle),
-            centerTitle: true,
-            backgroundColor: PRIMARY_COLOR,
+      // title: appTitle,
+      home: SafeArea(
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: const Scaffold(
+            // appBar: AppBar(
+            //   title: const Text(appTitle),
+            //   centerTitle: true,
+            //   backgroundColor: PRIMARY_COLOR,
+            // ),
+            body: SingleChildScrollView(child: MyCustomForm()),
           ),
-          body: const SingleChildScrollView(child: MyCustomForm()),
         ),
       ),
     );
@@ -41,8 +42,8 @@ class MyCustomForm extends StatefulWidget {
 
 class MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
-  dynamic run = 0;
-  dynamic earedRun = 0;
+  double _run = 0;
+  double _earedRun = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             label: '득점',
             onSaved: (value) {
               setState(() {
-                run = value!;
+                _run = double.parse(value!);
               });
             },
             validator: (value) {
@@ -73,7 +74,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             label: '실점',
             onSaved: (value) {
               setState(() {
-                earedRun = value!;
+                _earedRun = double.parse(value!);
               });
             },
             validator: (value) {
@@ -94,7 +95,10 @@ class MyCustomFormState extends State<MyCustomForm> {
     return Column(
       children: [
         Text(
-          '득실차는 {$run-$earedRun}',
+          expPythagorean(
+            run: _run,
+            earedRun: _earedRun,
+          ).toString(),
           style: const TextStyle(color: Colors.black),
         ),
       ],
@@ -107,7 +111,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         primary: BLUE_COLOR,
       ),
       child: const Text(
-        '계산하기',
+        '승률 계산',
         style: TextStyle(
           color: Colors.white,
         ),
@@ -115,8 +119,9 @@ class MyCustomFormState extends State<MyCustomForm> {
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           _formKey.currentState!.save();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const WinRate()));
+
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => const WinRate()));
 
           // ScaffoldMessenger.of(context).showSnackBar(
           //   const SnackBar(content: Text('광고팝업 : 3초짜리 또는 직접 닫기')),
