@@ -21,9 +21,11 @@ class MyApp extends StatelessWidget {
             // appBar: AppBar(
             //   title: const Text(appTitle),
             //   centerTitle: true,
-            //   backgroundColor: PRIMARY_COLOR,
+            backgroundColor: CARD_COLOR,
             // ),
-            body: SingleChildScrollView(child: MyCustomForm()),
+            body: SingleChildScrollView(
+              child: MyCustomForm(),
+            ),
           ),
         ),
       ),
@@ -42,6 +44,9 @@ class MyCustomForm extends StatefulWidget {
 
 class MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
+  int _trials = 0;
+  int _wins = 0;
+
   double _run = 0;
   double _earedRun = 0;
 
@@ -54,37 +59,116 @@ class MyCustomFormState extends State<MyCustomForm> {
         children: [
           Image.asset(
             'asset/img/logo_ball.jpeg',
-            width: 100,
+            width: 150,
           ),
-          renderTextFormField(
-            label: '득점',
-            onSaved: (value) {
-              setState(() {
-                _run = double.parse(value!);
-              });
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return '숫자를 입력하세요';
-              }
-              return null;
-            },
+          const SizedBox(
+            height: 20,
           ),
-          renderTextFormField(
-            label: '실점',
-            onSaved: (value) {
-              setState(() {
-                _earedRun = double.parse(value!);
-              });
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return '숫자를 입력하세요';
-              }
-              return null;
-            },
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(60, 8, 4, 8),
+                  child: renderTextFormField(
+                    label: '현재까지 경기 수',
+                    onSaved: (value) {
+                      setState(() {
+                        _trials = int.parse(value!);
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        // return '숫자를 입력하세요';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 8, 60, 8),
+                  child: renderTextFormField(
+                    label: '현재까지 승 수',
+                    onSaved: (value) {
+                      setState(() {
+                        _wins = int.parse(value!);
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        // return '숫자를 입력하세요';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-          renderSubmitButton(),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(60, 8, 4, 8),
+                  child: renderTextFormField(
+                    label: '누적득점',
+                    onSaved: (value) {
+                      setState(() {
+                        _run = double.parse(value!);
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        // return '숫자를 입력하세요';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 8, 60, 8),
+                  child: renderTextFormField(
+                    label: '누적실점',
+                    onSaved: (value) {
+                      setState(() {
+                        _earedRun = double.parse(value!);
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        // return '숫자를 입력하세요';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 18,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 60.0,
+            ),
+            child: SizedBox(
+              child: renderSubmitButton(),
+              width: double.infinity,
+              height: 35,
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
           renderStates()
         ],
       ),
@@ -101,6 +185,10 @@ class MyCustomFormState extends State<MyCustomForm> {
           ).toString(),
           style: const TextStyle(color: Colors.black),
         ),
+        Text(binormDist(
+          n: _trials,
+          p: int.parse(_wins.double),
+        ).toString())
       ],
     );
   }
@@ -108,11 +196,13 @@ class MyCustomFormState extends State<MyCustomForm> {
   renderSubmitButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: BLUE_COLOR,
+        primary: BACK_COLOR,
       ),
       child: const Text(
-        '승률 계산',
+        '플레이오프 진출 확률',
         style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
       ),
@@ -143,17 +233,24 @@ class MyCustomFormState extends State<MyCustomForm> {
             Text(
               label,
               style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black,
+                fontSize: 13,
+                color: TEXT_COLOR,
                 fontWeight: FontWeight.w700,
               ),
             )
           ],
         ),
         TextFormField(
+          decoration: const InputDecoration(
+            hintText: '숫자를 입력하세요',
+            hintStyle: TextStyle(
+              color: TEXT_COLOR,
+              fontSize: 12,
+            ),
+          ),
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           keyboardType: TextInputType.number,
-          autovalidateMode: AutovalidateMode.always,
+          // autovalidateMode: AutovalidateMode.always,
           onSaved: onSaved,
           validator: validator,
         ),
