@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:data/data.dart';
 
 double expPythagorean({
@@ -11,7 +12,5 @@ BinomialDistribution binormDist({
   required int n,
   required double p,
 }) {
-  int n = 0;
-  double p = 0.0;
   return BinomialDistribution(n, p);
 }

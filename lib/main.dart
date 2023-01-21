@@ -185,10 +185,6 @@ class MyCustomFormState extends State<MyCustomForm> {
           ).toString(),
           style: const TextStyle(color: Colors.black),
         ),
-        Text(binormDist(
-          n: _trials,
-          p: int.parse(_wins.double),
-        ).toString())
       ],
     );
   }
